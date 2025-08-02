@@ -312,35 +312,35 @@ async def resolve(interaction: discord.Interaction, bet_id: int, winner_index: i
 
 @bot.event
 async def on_member_join(member):
-    await member.send(f"Welcome to The Lands Between, {member.name}! If you have any questions, feel free to ask.")
+    await member.send(f"Welcome to the unholy ground, {member.name}! If you have any questions, feel free to ask.")
 
-@bot.event
-async def on_message(message):
-    if message.author == bot.user:
-        return
+# @bot.event
+# async def on_message(message):
+#     if message.author == bot.user:
+#         return
 
-    if "ok" in message.content.lower():
-        await message.channel.send(f"{message.author.mention} has initiated the VAR protocol.")
+#     if "ok" in message.content.lower():
+#         await message.channel.send(f"{message.author.mention} has initiated the VAR protocol.")
     
-    if "douma" in message.content.lower():
-        await message.channel.send(f"{message.author.name} is defending some dung.")
+#     if "douma" in message.content.lower():
+#         await message.channel.send(f"{message.author.name} is defending some dung.")
 
-    await bot.process_commands(message)
+#     await bot.process_commands(message)
 
 @bot.command()
 async def hello(ctx):
     await ctx.send(f"Hello {ctx.author.mention}, welcome to our bed!")
 
-@bot.command()
-async def poll(ctx, *, question):
-    if not question:
-        await ctx.send("Please provide a question for the poll.")
-        return
+# @bot.command()
+# async def poll(ctx, *, question):
+#     if not question:
+#         await ctx.send("Please provide a question for the poll.")
+#         return
 
-    embed = discord.Embed(title="Poll", description=question, color=discord.Color.blue())
-    message = await ctx.send(embed=embed)
-    await message.add_reaction("👍")
-    await message.add_reaction("👎")
+#     embed = discord.Embed(title="Poll", description=question, color=discord.Color.blue())
+#     message = await ctx.send(embed=embed)
+#     await message.add_reaction("👍")
+#     await message.add_reaction("👎")
 
 
 webserver.keep_alive()

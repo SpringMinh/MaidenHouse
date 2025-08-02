@@ -109,8 +109,33 @@ class StakeModal(discord.ui.Modal, title="Enter your stake"):
             """, (self.bet_id, interaction.user.id, self.option_id, self.stake.value))
             await db.commit()
 
-        await interaction.followup.send(f"Registered: **{self.stake.value}** on option #{self.option_id}", ephemeral=True)
+        # Fetch all bettors for this bet
+        async with aiosqlite.connect(DB_NAME) as db:
+            c = await db.execute("SELECT user_id FROM wagers WHERE bet_id=?", (self.bet_id,))
+            bettors = await c.fetchall()
 
+        bettor_names = []
+        for (user_id,) in bettors:
+            member = interaction.guild.get_member(user_id)
+            if member is None:
+                member = await interaction.client.fetch_user(user_id)
+            bettor_names.append(f"• {member.display_name}")
+
+        bettors_text = "\n".join(bettor_names) if bettor_names else "No bets yet."
+
+        # Edit the original bet message to show bettors
+        try:
+            content = interaction.message.content
+            if "\n\n**Current Bettors:**" in content:
+                content = content.split("\n\n**Current Bettors:**")[0]
+            await interaction.message.edit(
+                content=f"{content}\n\n**Current Bettors:**\n{bettors_text}",
+                view=interaction.message.components
+            )
+        except Exception:
+            pass
+
+        await interaction.followup.send(f"Registered: **{self.stake.value}** on option #{self.option_id}", ephemeral=True)
 
 class BetView(discord.ui.View):
     """
@@ -200,9 +225,34 @@ class BetView(discord.ui.View):
             await db.execute("DELETE FROM wagers WHERE bet_id=? AND user_id=?", 
                              (self.bet_id, interaction.user.id))
             await db.commit()
-        
-        await interaction.followup.send("Your bet was refunded.", ephemeral=True)
 
+        # Fetch all bettors for this bet
+        async with aiosqlite.connect(DB_NAME) as db:
+            c = await db.execute("SELECT user_id FROM wagers WHERE bet_id=?", (self.bet_id,))
+            bettors = await c.fetchall()
+
+        bettor_names = []
+        for (user_id,) in bettors:
+            member = interaction.guild.get_member(user_id)
+            if member is None:
+                member = await interaction.client.fetch_user(user_id)
+            bettor_names.append(f"• {member.display_name}")
+
+        bettors_text = "\n".join(bettor_names) if bettor_names else "No bets yet."
+
+        # Edit the original bet message to show bettors
+        try:
+            content = interaction.message.content
+            if "\n\n**Current Bettors:**" in content:
+                content = content.split("\n\n**Current Bettors:**")[0]
+            await interaction.message.edit(
+                content=f"{content}\n\n**Current Bettors:**\n{bettors_text}",
+                view=interaction.message.components
+            )
+        except Exception:
+            pass
+
+        await interaction.followup.send("Your bet was refunded.", ephemeral=True)
 
 # --- Bot Commands ---
 @bot.tree.command(name="createbet", description="Create a new friendly bet")

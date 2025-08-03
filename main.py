@@ -367,6 +367,15 @@ async def resolve(interaction: discord.Interaction, bet_id: int, winner_index: i
 async def on_member_join(member):
     await member.send(f"Welcome to the unholy ground, {member.name}! If you have any questions, feel free to ask.")
 
+@bot.command()
+async def say(ctx, *, message: str):
+    """Anonymous repeater"""
+    try:
+        await ctx.message.delete()  # Delete the user's command message
+    except Exception:
+        pass
+    await ctx.send(message)
+
 @bot.event
 async def on_message(message):
     if message.author == bot.user:

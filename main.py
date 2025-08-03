@@ -249,7 +249,7 @@ class BetView(discord.ui.View):
                 content = content.split("\n\n**Current Bettors:**")[0]
             await interaction.message.edit(
                 content=f"{content}\n\n**Current Bettors:**\n{bettors_text}",
-                view=interaction.message.components
+                # view=interaction.message.components
             )
         except Exception:
             pass

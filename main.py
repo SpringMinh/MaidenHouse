@@ -114,6 +114,8 @@ class StakeModal(discord.ui.Modal, title="Enter your stake"):
             c = await db.execute("SELECT user_id FROM wagers WHERE bet_id=?", (self.bet_id,))
             bettors = await c.fetchall()
 
+        print("concu2")
+
         bettor_names = []
         for (user_id,) in bettors:
             member = interaction.guild.get_member(user_id)
@@ -130,7 +132,7 @@ class StakeModal(discord.ui.Modal, title="Enter your stake"):
                 content = content.split("\n\n**Current Bettors:**")[0]
             await interaction.message.edit(
                 content=f"{content}\n\n**Current Bettors:**\n{bettors_text}",
-                view=interaction.message.components
+                # view=interaction.message.components
             )
         except Exception:
             pass

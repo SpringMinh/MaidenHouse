@@ -366,6 +366,17 @@ async def resolve(interaction: discord.Interaction, bet_id: int, winner_index: i
 async def on_member_join(member):
     await member.send(f"Welcome to the unholy ground, {member.name}! If you have any questions, feel free to ask.")
 
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+
+    if message.content.strip().lower() == "is this ragebait":
+        await message.channel.send("yes")
+        return
+
+    await bot.process_commands(message)
+
 # @bot.event
 # async def on_message(message):
 #     if message.author == bot.user:

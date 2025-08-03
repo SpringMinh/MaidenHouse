@@ -7,6 +7,7 @@ import aiosqlite
 import asyncio
 from dotenv import load_dotenv
 import webserver
+import random
 
 load_dotenv()
 # TOKEN = os.getenv("DISCORD_TOKEN")
@@ -377,6 +378,11 @@ async def on_message(message):
     
     if message.content.strip().lower() == "i need a handjob":
         await message.channel.send("please kill yourself")
+        return
+    
+    if message.content.strip().lower() == "say it akee":
+        responses = ["meh", "we're over", "no", "it's grim", "this shit is ass", "it's peak", "it's mid", "it's bleak", "it's shit"]
+        await message.channel.send(random.choice(responses))
         return
 
     await bot.process_commands(message)

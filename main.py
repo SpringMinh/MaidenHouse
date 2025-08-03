@@ -377,6 +377,17 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+
+    if message.content.strip().lower() == "i need a handjob":
+        await message.channel.send("please kill yourself")
+        return
+
+    await bot.process_commands(message)
+
 # @bot.event
 # async def on_message(message):
 #     if message.author == bot.user:

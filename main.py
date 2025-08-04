@@ -13,23 +13,16 @@ import random
 load_dotenv()
 # TOKEN = os.getenv("DISCORD_TOKEN")
 TOKEN2 = os.environ["discordkey"]
-
 RESPONSES_PATH = "/etc/secrets/bot_responses.json"
+THRESHOLD  = 0.01
 
 if os.path.isfile(RESPONSES_PATH):
     print(f"Loading triggers from {RESPONSES_PATH}")
     with open(RESPONSES_PATH, "r", encoding="utf-8") as f:
         TRIGGERS = json.load(f)
 else:
-    # Fallback if someone runs locally without the secret file:
+    # hehe
     TRIGGERS = {
-        "is this ragebait":    ["yes"],
-        "i need a handjob":    ["please kill yourself"],
-        "say it akee": [
-            "meh", "we're over", "no", "it's grim",
-            "this shit is ass", "it's peak", "it's mid",
-            "it's bleak", "it's shit"
-        ],
     }
 
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
@@ -402,8 +395,22 @@ async def on_message(message):
 
     key = message.content.strip().lower()
     if key in TRIGGERS:
-        # pick a random response (even if there's only one)
-        await message.channel.send(random.choice(TRIGGERS[key]))
+        entries = TRIGGERS[key]
+        choice = random.choices(
+            population=entries,
+            weights=[e["weight"] for e in entries],
+            k=1
+        )[0]
+
+        total_weight = sum(e["weight"] for e in entries)
+        prob = choice["weight"] / total_weight
+
+        if prob < THRESHOLD:
+            reply = "**Rare response triggered!!**\n\n" + choice["text"]
+        else:
+            reply = choice["text"]
+
+        await message.channel.send(reply)
         return
 
     await bot.process_commands(message)

@@ -1,3 +1,4 @@
+import json
 import os
 import discord
 from discord import app_commands
@@ -12,6 +13,24 @@ import random
 load_dotenv()
 # TOKEN = os.getenv("DISCORD_TOKEN")
 TOKEN2 = os.environ["discordkey"]
+
+RESPONSES_PATH = "/etc/secrets/bot_responses.json"
+
+if os.path.isfile(RESPONSES_PATH):
+    print(f"Loading triggers from {RESPONSES_PATH}")
+    with open(RESPONSES_PATH, "r", encoding="utf-8") as f:
+        TRIGGERS = json.load(f)
+else:
+    # Fallback if someone runs locally without the secret file:
+    TRIGGERS = {
+        "is this ragebait":    ["yes"],
+        "i need a handjob":    ["please kill yourself"],
+        "say it akee": [
+            "meh", "we're over", "no", "it's grim",
+            "this shit is ass", "it's peak", "it's mid",
+            "it's bleak", "it's shit"
+        ],
+    }
 
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 intents = discord.Intents.default()
@@ -381,17 +400,10 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    if message.content.strip().lower() == "is this ragebait":
-        await message.channel.send("yes")
-        return
-    
-    if message.content.strip().lower() == "i need a handjob":
-        await message.channel.send("please kill yourself")
-        return
-    
-    if message.content.strip().lower() == "say it akee":
-        responses = ["meh", "we're over", "no", "it's grim", "this shit is ass", "it's peak", "it's mid", "it's bleak", "it's shit"]
-        await message.channel.send(random.choice(responses))
+    key = message.content.strip().lower()
+    if key in TRIGGERS:
+        # pick a random response (even if there's only one)
+        await message.channel.send(random.choice(TRIGGERS[key]))
         return
 
     await bot.process_commands(message)

@@ -387,11 +387,11 @@ async def on_member_join(member):
     #     msg = f"All hail {member.name}, our new admin overlord!"
     else:
         msg1 = f"Welcome to the unholy ground, {member.name}! If you have any questions, feel free to ask."
-        msg2 = f"{member.mention} joins the battle! Let's give them our dearest welcomes! 🎉"
+        msg2 = f"{member.mention} just starts gooning! Let's give them our dearest welcomes! 🎉"
     await member.send(msg1)
 
     # Send welcome message in a specific channel (replace 'welcome' with your channel name)
-    channel = discord.utils.get(member.guild.text_channels, name="chào-mừng-và-nội-quy")
+    channel = discord.utils.get(member.guild.text_channels, name="announcements")
     if channel:
         await channel.send(msg2)
 

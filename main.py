@@ -377,7 +377,23 @@ async def resolve(interaction: discord.Interaction, bet_id: int, winner_index: i
 
 @bot.event
 async def on_member_join(member):
-    await member.send(f"Welcome to the unholy ground, {member.name}! If you have any questions, feel free to ask.")
+    if "lalalaa" in member.name.lower():
+        msg1 = f"Welcome, {member.name}! We hope you bring lots of cat energy 🐱."
+        msg2 = f"{member.mention} has raided the holy ground!! Let's give them our dearest welcomes! 🎉"
+    elif "flint" in member.name.lower():
+        msg1 = f"Welcome, {member.name}! May your presence light up our server like a flint spark! 🔥"
+        msg2 = f"This can't be real... The leakest of all time, Lord of the Fallen, the one and only {member.mention} has come to lifesteal us once again! Give them our dearest welcomes!! 🎉"
+    # elif member.name.lower().startswith("admin"):
+    #     msg = f"All hail {member.name}, our new admin overlord!"
+    else:
+        msg1 = f"Welcome to the unholy ground, {member.name}! If you have any questions, feel free to ask."
+        msg2 = f"{member.mention} joins the battle! Let's give them our dearest welcomes! 🎉"
+    await member.send(msg1)
+
+    # Send welcome message in a specific channel (replace 'welcome' with your channel name)
+    channel = discord.utils.get(member.guild.text_channels, name="chào-mừng-và-nội-quy")
+    if channel:
+        await channel.send(f"{member.mention} {msg2}")
 
 @bot.command()
 async def say(ctx, *, message: str):

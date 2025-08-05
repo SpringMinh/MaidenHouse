@@ -393,7 +393,7 @@ async def on_member_join(member):
     # Send welcome message in a specific channel (replace 'welcome' with your channel name)
     channel = discord.utils.get(member.guild.text_channels, name="chào-mừng-và-nội-quy")
     if channel:
-        await channel.send(f"{member.mention} {msg2}")
+        await channel.send(msg2)
 
 @bot.command()
 async def say(ctx, *, message: str):
